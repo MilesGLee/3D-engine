@@ -265,20 +265,16 @@ namespace _3dEngine
 
         public void LookAt(Vector3 position)
         {
-            //Vector3 direction = (position - LocalPosition).Normalized;
-            //float dotProduct = Vector3.DotProduct(direction, Forward);
+            Vector3 direction = (position - WorldPosition).Normalized;
 
-            //if (dotProduct > 1)
-            //    dotProduct = 1;
+            if (direction.Magnitude == 0)
+                direction = new Vector3(0, 0, 1);
+            Vector3 alignAxis = new Vector3(0, 1, 0);
 
-            //float angle = (float)Math.Acos(dotProduct);
-            //Vector3 perpendicularDirection = new Vector3(direction.Y, -direction.X, direction.Z);
-            //float perpendicularDotProduct = Vector3.DotProduct(perpendicularDirection, Forward);
+            Vector3 newYAxis = new Vector3(0, 1, 0);
+            Vector3 newXAxis = new Vector3(1, 0, 0);
 
-            //if (perpendicularDotProduct != 0)
-            //    angle *= -perpendicularDotProduct / Math.Abs(perpendicularDotProduct);
 
-            //Rotate(angle);
         }
     }
 }
