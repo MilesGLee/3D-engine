@@ -18,6 +18,7 @@ namespace _3dEngine
         public bool _started;
         private float _speed;
         private Vector3 _forward = new Vector3(0, 0, 1);
+        private Vector3 _right = new Vector3(1, 0, 0);
         private Matrix4 _localTransform = Matrix4.Identity;
         private Matrix4 _globalTransform = Matrix4.Identity;
         public Matrix4 _translation = Matrix4.Identity;
@@ -114,6 +115,11 @@ namespace _3dEngine
                 Vector3 point = value.Normalized + LocalPosition;
                 LookAt(point);
             }
+        }
+
+        public Vector3 Right
+        {
+            get { return new Vector3(_rotation.M00, _rotation.M10, _rotation.M20); }
         }
 
         public Actor() { }
