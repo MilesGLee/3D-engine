@@ -17,6 +17,7 @@ namespace _3dEngine
         public static Scene _currentScene;
         private Camera3D _camera = new Camera3D();
         private Player _player = new Player(0, 0, 5, "Player", Shape.SPHERE);
+        private Actor _cameraActor = new Actor(new Vector3(0, 5, 2), 0);
 
         public void Run() 
         {
@@ -54,6 +55,10 @@ namespace _3dEngine
             _player.LookAt(new Vector3(1, 0, 0));
             _player.SetColor(new Vector4(52, 5, 12, 255));
 
+            _cameraActor.Parent = _player;
+            _cameraActor.SetTranslate(0, 5, -10);
+
+            scene.AddActor(_cameraActor);
             scene.AddActor(_player);
 
             _stopwatch.Start();
@@ -67,7 +72,7 @@ namespace _3dEngine
 
         private void InitializeCamera() 
         {
-            _camera.position = new System.Numerics.Vector3(0, 10, 10); //Camera Position
+            //_camera.position = new System.Numerics.Vector3(0, 10, 10); //Camera Position
             _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.up = new System.Numerics.Vector3(0, 1, 0); //Camera up vector
@@ -78,6 +83,8 @@ namespace _3dEngine
         private void Update(float deltaTime) 
         {
             _scenes[_currentSceneIndex].Update(deltaTime);
+            _camera.position = new System.Numerics.Vector3(_cameraActor.WorldPosition.X, _cameraActor.WorldPosition.Y, _cameraActor.WorldPosition.Z);
+            _camera.target = new System.Numerics.Vector3(_player.WorldPosition.X, _player.WorldPosition.Y, _player.WorldPosition.Z);
             while (Console.KeyAvailable)
                 Console.ReadKey(true);
         }
