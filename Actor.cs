@@ -15,7 +15,7 @@ namespace _3dEngine
     class Actor
     {
         private string _name;
-        private bool _started;
+        public bool _started;
         private float _speed;
         private Vector3 _forward = new Vector3(0, 0, 1);
         private Matrix4 _localTransform = Matrix4.Identity;
@@ -26,6 +26,12 @@ namespace _3dEngine
         private Actor[] _children = new Actor[0];
         private Actor _parent;
         private Shape _shape;
+        private Color _color;
+
+        public Color ShapeColor 
+        {
+            get { return _color; }
+        }
 
         public bool Started 
         {
@@ -102,7 +108,7 @@ namespace _3dEngine
 
         public Vector3 Forward
         {
-            get { return new Vector3(_rotation.M00, _rotation.M10, _rotation.M20); }
+            get { return new Vector3(_rotation.M02, _rotation.M12, _rotation.M22); }
             set
             {
                 Vector3 point = value.Normalized + LocalPosition;
@@ -198,20 +204,21 @@ namespace _3dEngine
         public virtual void Draw() 
         {
             System.Numerics.Vector3 position = new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z);
-
+            System.Numerics.Vector3 endPos = new System.Numerics.Vector3(WorldPosition.X + Forward.X * 50, WorldPosition.Y + Forward.Y * 50, WorldPosition.Z + Forward.Z * 50);
             switch (_shape) 
             {
                 case Shape.CUBE:
                     float sizeX = new Vector3(GlobalTransform.M00, GlobalTransform.M10, GlobalTransform.M20).Magnitude;
                     float sizeY = new Vector3(GlobalTransform.M01, GlobalTransform.M11, GlobalTransform.M21).Magnitude;
                     float sizeZ = new Vector3(GlobalTransform.M02, GlobalTransform.M12, GlobalTransform.M22).Magnitude;
-                    Raylib.DrawCube(position, sizeX, sizeY, sizeZ, Color.BLUE);
+                    Raylib.DrawCube(position, sizeX, sizeY, sizeZ, ShapeColor);
                     break;
                 case Shape.SPHERE:
                     sizeX = new Vector3(GlobalTransform.M00, GlobalTransform.M10, GlobalTransform.M20).Magnitude;
-                    Raylib.DrawSphere(position, sizeX, Color.BLUE);
+                    Raylib.DrawSphere(position, sizeX, ShapeColor);
                     break;
             }
+            Raylib.DrawLine3D(position, endPos, Color.RED);
         }
 
         public void End()
@@ -265,16 +272,63 @@ namespace _3dEngine
 
         public void LookAt(Vector3 position)
         {
+            //Get the direction for the actor to look in
             Vector3 direction = (position - WorldPosition).Normalized;
 
+            //If the direction has a length of zero...
             if (direction.Magnitude == 0)
+                ///... Set it to be the default forward
                 direction = new Vector3(0, 0, 1);
+            //Create a vector that points directly upwards
             Vector3 alignAxis = new Vector3(0, 1, 0);
-
+            //Creates two new vectors that will be the new x and y axis
             Vector3 newYAxis = new Vector3(0, 1, 0);
             Vector3 newXAxis = new Vector3(1, 0, 0);
 
+            //if the direction vector is parallel to the align axis vector...
+            if (Math.Abs(direction.Y) > 0 && direction.X == 0 && direction.Z == 0)
+            {
+                //... set the align axis vector to point to the right
+                alignAxis = new Vector3(1, 0, 0);
 
+
+                //Get the cross product of the direction and the right to find the y axis
+                newYAxis = Vector3.CrossProduct(direction, alignAxis);
+                //normalize the new y axis to prevent the matrix from being scaled
+                newYAxis.Normalize();
+
+                //Get the cross product of the new y axis and the direction to find the new x axis
+                newXAxis = Vector3.CrossProduct(newYAxis, direction);
+                //Normalize new x axis to prevent the matrix from being scaled
+                newXAxis.Normalize();
+            }
+            //if the direction vector is not parallel
+            else 
+            {
+                //get the cross product of the align axis and direction vector
+                newXAxis = Vector3.CrossProduct(alignAxis, direction);
+                //normalize the new x axis to prevent the matrix from being scaled
+                newXAxis.Normalize();
+                //get the cross product of the direction and new x axis vectors
+                newYAxis = Vector3.CrossProduct(direction, newXAxis);
+                //normalize the new y axis to prevent the matrix from being scaled
+                newYAxis.Normalize();
+            }
+            //create new matrix with the new axis
+            _rotation = new Matrix4(newXAxis.X, newYAxis.X, direction.X, 0,
+                                    newXAxis.Y, newYAxis.Y, direction.Y, 0,
+                                    newXAxis.Z, newYAxis.Z, direction.Z, 0,
+                                    0, 0, 0, 1);
+        }
+
+        public void SetColor(Color color) 
+        {
+            _color = color;
+        }
+
+        public void SetColor(Vector4 colorValue) 
+        {
+            _color = new Color((int)colorValue.X, (int)colorValue.Y, (int)colorValue.Z, (int)colorValue.W);
         }
     }
 }

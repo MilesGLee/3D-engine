@@ -33,12 +33,10 @@ namespace _3dEngine
         {
             int xDiretion = -Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
                 + Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
-            int yDiretion = -Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
-                + Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_SPACE));
             int zDiretion = -Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_W))
                 + Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_S));
 
-            Vector3 moveDirection = new Vector3(xDiretion, yDiretion, zDiretion);
+            Vector3 moveDirection = new Vector3(xDiretion, 0, zDiretion);
             Velocity = moveDirection.Normalized * Speed * deltaTime;
             if (Velocity.Magnitude > 0)
                 Forward = Velocity.Normalized;

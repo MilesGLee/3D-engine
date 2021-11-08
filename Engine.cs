@@ -16,7 +16,8 @@ namespace _3dEngine
         private Stopwatch _stopwatch = new Stopwatch();
         public static Scene _currentScene;
         private Camera3D _camera = new Camera3D();
-        
+        private Player _player = new Player(0, 0, 5, "Player", Shape.SPHERE);
+
         public void Run() 
         {
             Start();
@@ -45,28 +46,29 @@ namespace _3dEngine
         {
             Raylib.InitWindow(800, 450, "3d Engine");
             Raylib.SetTargetFPS(60);
-            InitializeCamera();
+            
 
             Scene scene = new Scene();
-            Actor actor = new Actor(0, 0, 0, "Actor", Shape.SPHERE);
-            actor.SetScale(1, 1, 1);
-            actor.SetTranslate(0, 0, 0);
-            Player player = new Player(0, 0, 5, "Player", Shape.SPHERE);
-            player.SetScale(1, 1, 1);
+            _player.Translate(0, 1, 0);
+            _player.SetScale(1, 1, 1);
+            _player.LookAt(new Vector3(1, 0, 0));
+            _player.SetColor(new Vector4(52, 5, 12, 255));
 
-            scene.AddActor(actor);
-            scene.AddActor(player);
+            scene.AddActor(_player);
 
             _stopwatch.Start();
 
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
             _currentScene = _scenes[_currentSceneIndex];
+
+            InitializeCamera();
         }
 
         private void InitializeCamera() 
         {
             _camera.position = new System.Numerics.Vector3(0, 10, 10); //Camera Position
+            _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.up = new System.Numerics.Vector3(0, 1, 0); //Camera up vector
             _camera.fovy = 45; //Camera field of view
