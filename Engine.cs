@@ -53,7 +53,7 @@ namespace _3dEngine
             _player.Translate(0, 1, 0);
             _player.SetScale(1, 1, 1);
             _player.LookAt(new Vector3(1, 0, 0));
-            _player.SetColor(new Vector4(52, 5, 12, 255));
+            _player.SetColor(new Vector4(25, 25, 25, 255));
 
             _cameraActor.Parent = _player;
             _cameraActor.SetTranslate(0, 5, -10);
@@ -72,7 +72,7 @@ namespace _3dEngine
 
         private void InitializeCamera() 
         {
-            //_camera.position = new System.Numerics.Vector3(0, 10, 10); //Camera Position
+            _camera.position = new System.Numerics.Vector3(10, 10, 0); //Camera Position
             _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
             _camera.up = new System.Numerics.Vector3(0, 1, 0); //Camera up vector
@@ -95,7 +95,7 @@ namespace _3dEngine
             Raylib.BeginMode3D(_camera);
 
             Raylib.ClearBackground(Color.GRAY);
-            Raylib.DrawGrid(50, 1);
+            Raylib.DrawGrid(10, 2);
 
             _currentScene.Draw();
 

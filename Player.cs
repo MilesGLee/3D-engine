@@ -10,6 +10,7 @@ namespace _3dEngine
     {
         private float _speed;
         private Vector3 _velocity;
+        private float rot = 0;
         
         public float Speed
         {
@@ -36,10 +37,29 @@ namespace _3dEngine
             int zDiretion = -Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_W))
                 + Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_S));
 
-            Vector3 moveDirection = new Vector3(xDiretion, 0, zDiretion);
-            Velocity = moveDirection.Normalized * Speed * deltaTime;
-            if (Velocity.Magnitude > 0)
-                Forward = Velocity.Normalized;
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+                rot = rot + 0.05f;
+            if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+                rot -= 0.05f;
+
+            //if (rot > 360)
+            //    rot = 0;
+            //if (rot < 0)
+            //    rot = 360;
+
+            Console.WriteLine(rot);
+
+            Rotate(0, rot, 0);
+
+            //Vector3 moveDirection = new Vector3(xDiretion, 0, zDiretion);
+            //Velocity = moveDirection.Normalized * Speed * deltaTime;
+
+            Vector3 moveDirectionX = Right * -xDiretion;
+            Vector3 moveDirectionZ = Forward * -zDiretion;
+            Velocity = (moveDirectionZ + moveDirectionX).Normalized * Speed * deltaTime;
+
+            //if (Velocity.Magnitude > 0)
+            //    Forward = Velocity.Normalized;
 
             base.Translate(Velocity.X, Velocity.Y, Velocity.Z);
 
