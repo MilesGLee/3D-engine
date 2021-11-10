@@ -117,59 +117,59 @@ namespace _3dEngine
             _actors = tempArray;
         }
 
-        //public void AddUIElement(Actor UI)
-        //{
-        //    //Create a temp array larger than the original
-        //    Actor[] tempArray = new Actor[_UIElements.Length + 1];
+        public void AddUIElement(Actor UI)
+        {
+            //Create a temp array larger than the original
+            Actor[] tempArray = new Actor[_UIElements.Length + 1];
 
-        //    //Copy all values from the original array into the temp array
-        //    for (int i = 0; i < _UIElements.Length; i++)
-        //    {
-        //        tempArray[i] = _UIElements[i];
-        //    }
-        //    //Adds the new actor to the end of the new array
-        //    tempArray[_UIElements.Length] = UI;
+            //Copy all values from the original array into the temp array
+            for (int i = 0; i < _UIElements.Length; i++)
+            {
+                tempArray[i] = _UIElements[i];
+            }
+            //Adds the new actor to the end of the new array
+            tempArray[_UIElements.Length] = UI;
 
-        //    //Set the old array to be the new array;
-        //    _UIElements = tempArray;
-        //}
+            //Set the old array to be the new array;
+            _UIElements = tempArray;
+        }
 
-        //public bool RemoveUIElement(UIText actor)
-        //{
-        //    //Create a variable to store if the removal was successful
-        //    bool actorRemoved = false;
-        //    //Create a new array that is smaller than the original
-        //    Actor[] tempArray = new Actor[_UIElements.Length - 1];
+        public bool RemoveUIElement(UIText actor)
+        {
+            //Create a variable to store if the removal was successful
+            bool actorRemoved = false;
+            //Create a new array that is smaller than the original
+            Actor[] tempArray = new Actor[_UIElements.Length - 1];
 
-        //    //Creates a variable to store the index of the temparray
-        //    int j = 0;
-        //    //Copies all of the values except the actor we don't want into the new array
-        //    for (int i = 0; i < _UIElements.Length; i++)
-        //    {
-        //        //If the actor that th eloop is on is no tthe one to remove...
-        //        if (_UIElements[i] != actor)
-        //        {
-        //            //...add the actor into the new array and increment the temp array counter
-        //            tempArray[j] = _UIElements[i];
-        //            j++;
-        //        }
+            //Creates a variable to store the index of the temparray
+            int j = 0;
+            //Copies all of the values except the actor we don't want into the new array
+            for (int i = 0; i < _UIElements.Length; i++)
+            {
+                //If the actor that th eloop is on is no tthe one to remove...
+                if (_UIElements[i] != actor)
+                {
+                    //...add the actor into the new array and increment the temp array counter
+                    tempArray[j] = _UIElements[i];
+                    j++;
+                }
 
-        //        //Otherwise if this actor is the one to remove...
-        //        else
-        //        {
-        //            //...Set acorRemoved to true
-        //            actorRemoved = true;
-        //        }
-        //    }
+                //Otherwise if this actor is the one to remove...
+                else
+                {
+                    //...Set acorRemoved to true
+                    actorRemoved = true;
+                }
+            }
 
-        //    //If the actor removal was successful...
-        //    if (actorRemoved)
-        //        //Set the actors array to be the new array
-        //        _UIElements = tempArray;
+            //If the actor removal was successful...
+            if (actorRemoved)
+                //Set the actors array to be the new array
+                _UIElements = tempArray;
 
-        //    //Return if an actor was removed
-        //    return actorRemoved;
-        //}
+            //Return if an actor was removed
+            return actorRemoved;
+        }
 
         public bool RemoveActor(Actor actor)
         {

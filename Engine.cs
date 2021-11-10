@@ -61,9 +61,12 @@ namespace _3dEngine
 
             InitializeWindow();
             Scene.InitializeActors();
-
             Scene sceneOne = new Scene();
             sceneOne.AddActor(Scene.SceneOneActors);
+
+            UIText text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "Hello");
+
+            sceneOne.AddUIElement(text);
 
             SetCurrentScene(sceneOne);
             _scenes[_currentSceneIndex].Start();
@@ -94,13 +97,15 @@ namespace _3dEngine
             Raylib.BeginMode3D(Camera.Camera3D);
 
             Raylib.ClearBackground(new Color(100, 0, 0, 255));
-            Raylib.DrawGrid(500, 1);
+            Raylib.DrawGrid(500, 20);
 
             //Adds all actor icons to buffer
             _scenes[_currentSceneIndex].Draw();
+            
+            Raylib.EndMode3D();
+
             _scenes[_currentSceneIndex].DrawUI();
 
-            Raylib.EndMode3D();
             Raylib.EndDrawing();
         }
 
