@@ -14,124 +14,149 @@ namespace _3dEngine
         private static int _currentSceneIndex;
         private Scene[] _scenes = new Scene[0];
         private Stopwatch _stopwatch = new Stopwatch();
-        public static Scene _currentScene;
-        private Camera3D _camera = new Camera3D();
-        private Player _player = new Player(0, 0, 5, "Player", Shape.SPHERE);
-        private Actor _cameraActor = new Actor(new Vector3(0, 5, 2), 0);
+        public static Scene CurrentScene;
+        public static Camera Camera;
 
-        public void Run() 
+        /// <summary>
+        /// Called to begin the application
+        /// </summary>
+        public void Run()
         {
+            //Call start for the entire application
             Start();
 
             float currentTime = 0;
             float lastTime = 0;
             float deltaTime = 0;
 
-            while (!_applicationShouldClose || Raylib.WindowShouldClose()) 
+            //Loops until the application is told to close
+            while (!_applicationShouldClose && !Raylib.WindowShouldClose())
             {
+                //Get how much time has passed since the application started
                 currentTime = _stopwatch.ElapsedMilliseconds / 1000.0f;
 
+                //Set delta time to tbe the difference in time from the last time recorded to the current time
                 deltaTime = currentTime - lastTime;
 
+                //Update the application
                 Update(deltaTime);
-
+                //Draw all items
                 Draw();
 
+                //Set the last time recorded to be the current time
                 lastTime = currentTime;
             }
 
+            //Called when the application closes
             End();
         }
 
-        private void Start() 
+
+        /// <summary>
+        /// Called when the application starts
+        /// </summary>
+        private void Start()
         {
-            Raylib.InitWindow(800, 450, "3d Engine");
-            Raylib.SetTargetFPS(60);
-            
-
-            Scene scene = new Scene();
-            _player.Translate(0, 1, 0);
-            _player.SetScale(1, 1, 1);
-            _player.LookAt(new Vector3(1, 0, 0));
-            _player.SetColor(new Vector4(25, 25, 25, 255));
-
-            _cameraActor.Parent = _player;
-            _cameraActor.SetTranslate(0, 5, -10);
-
-            scene.AddActor(_cameraActor);
-            scene.AddActor(_player);
-
             _stopwatch.Start();
 
-            _currentSceneIndex = AddScene(scene);
+            InitializeWindow();
+            Scene.InitializeActors();
+
+            Scene sceneOne = new Scene();
+            sceneOne.AddActor(Scene.SceneOneActors);
+
+            SetCurrentScene(sceneOne);
             _scenes[_currentSceneIndex].Start();
-            _currentScene = _scenes[_currentSceneIndex];
-
-            InitializeCamera();
         }
 
-        private void InitializeCamera() 
+        /// <summary>
+        /// Called everytime the game loops
+        /// </summary>
+        private void Update(float deltaTime)
         {
-            _camera.position = new System.Numerics.Vector3(10, 10, 0); //Camera Position
-            _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
-            _camera.target = new System.Numerics.Vector3(0, 0, 0); //Point the Camera is focused on
-            _camera.up = new System.Numerics.Vector3(0, 1, 0); //Camera up vector
-            _camera.fovy = 45; //Camera field of view
-            _camera.projection = CameraProjection.CAMERA_PERSPECTIVE; //Camera mode type
-        }
-
-        private void Update(float deltaTime) 
-        {
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_Q))
+                Raylib.ToggleFullscreen();
             _scenes[_currentSceneIndex].Update(deltaTime);
-            _camera.position = new System.Numerics.Vector3(_cameraActor.WorldPosition.X, _cameraActor.WorldPosition.Y, _cameraActor.WorldPosition.Z);
-            _camera.target = new System.Numerics.Vector3(_player.WorldPosition.X, _player.WorldPosition.Y, _player.WorldPosition.Z);
+            _scenes[_currentSceneIndex].UpdateUI(deltaTime);
+
+
+
             while (Console.KeyAvailable)
                 Console.ReadKey(true);
         }
 
-        private void Draw() 
+        /// <summary>
+        /// Called every time the game loops to update visuals
+        /// </summary>
+        private void Draw()
         {
             Raylib.BeginDrawing();
-            Raylib.BeginMode3D(_camera);
+            Raylib.BeginMode3D(Camera.Camera3D);
 
-            Raylib.ClearBackground(Color.GRAY);
-            Raylib.DrawGrid(10, 2);
+            Raylib.ClearBackground(new Color(100, 0, 0, 255));
+            Raylib.DrawGrid(500, 1);
 
-            _currentScene.Draw();
+            //Adds all actor icons to buffer
+            _scenes[_currentSceneIndex].Draw();
+            _scenes[_currentSceneIndex].DrawUI();
 
             Raylib.EndMode3D();
             Raylib.EndDrawing();
         }
 
+        /// <summary>
+        /// Called when the application exits
+        /// </summary>
         private void End()
         {
             _scenes[_currentSceneIndex].End();
             Raylib.CloseWindow();
         }
 
+        /// <summary>
+        /// Adds a scene to the engine's scene array
+        /// </summary>
+        /// <param name="scene">The scene that will be added to the scene array</param>
+        /// <returns>The index where the new scene is located</returns>
         public int AddScene(Scene scene)
         {
+            //Create a new temporary array
             Scene[] tempArray = new Scene[_scenes.Length + 1];
 
+            //Copy all the values from the old array into the new array
             for (int i = 0; i < _scenes.Length; i++)
-            {
                 tempArray[i] = _scenes[i];
-            }
 
+            //Set the last index to be the new scene
             tempArray[_scenes.Length] = scene;
 
+            //Set the old array to be the new array
             _scenes = tempArray;
 
+            //Return the last index
             return _scenes.Length - 1;
         }
 
-        public static ConsoleKey GetNewtKey()
+        public void SetCurrentScene(Scene scene)
         {
-            if (!Console.KeyAvailable)
-                return 0;
-            return Console.ReadKey(true).Key;
+            _currentSceneIndex = AddScene(scene);
+            CurrentScene = _scenes[_currentSceneIndex];
         }
 
+        public void InitializeWindow()
+        {
+            int height = Raylib.GetMonitorHeight(1);
+            int width = Raylib.GetMonitorWidth(1);
+            //Create a window using rayLib
+            Raylib.InitWindow(width, height, "Math For Games");
+            Raylib.DisableCursor();
+            Raylib.MaximizeWindow();
+            Raylib.SetTargetFPS(60);
+        }
+
+        /// <summary>
+        /// A function that can be used globally to end the application
+        /// </summary>
         public static void CloseApplication()
         {
             _applicationShouldClose = true;
