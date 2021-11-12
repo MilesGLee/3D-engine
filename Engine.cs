@@ -16,6 +16,9 @@ namespace _3dEngine
         private Stopwatch _stopwatch = new Stopwatch();
         public static Scene CurrentScene;
         public static Camera Camera;
+        private UIText text;
+        private Actor playerFollow;
+        private Actor player;
 
         /// <summary>
         /// Called to begin the application
@@ -60,13 +63,27 @@ namespace _3dEngine
             _stopwatch.Start();
 
             InitializeWindow();
-            Scene.InitializeActors();
             Scene sceneOne = new Scene();
-            sceneOne.AddActor(Scene.SceneOneActors);
 
-            UIText text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "Hello");
+            player = new Player(0, 1, 0, 6, 3, new Color(0, 0, 100, 255), "Player", Shape.SPHERE);
+            Engine.Camera = new Camera(player);
+
+            text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "");
+
+            playerFollow = new Actor(new Vector3(0, 0, 0), Shape.CUBE, new Color(0, 0, 0, 0), "Player Follow");
+            Actor playerHealth = new Actor(new Vector3(0, 1.5f, 0), Shape.CUBE, Color.GREEN, "Player Health");
+            playerHealth.SetScale(2, 0.5f, 0.5f);
+            playerHealth.Parent = playerFollow;
+            Actor sword = new Actor(new Vector3(0, 0, 1.5f), Shape.CUBE, Color.GRAY, "Player Sword");
+            sword.Parent = playerFollow;
+            sword.SetScale(0.5f, 0.5f, 2);
 
             sceneOne.AddUIElement(text);
+            sceneOne.AddActor(player);
+            sceneOne.AddActor(Camera);
+            sceneOne.AddActor(playerHealth);
+            sceneOne.AddActor(playerFollow);
+            sceneOne.AddActor(sword);
 
             SetCurrentScene(sceneOne);
             _scenes[_currentSceneIndex].Start();
@@ -82,7 +99,8 @@ namespace _3dEngine
             _scenes[_currentSceneIndex].Update(deltaTime);
             _scenes[_currentSceneIndex].UpdateUI(deltaTime);
 
-
+            text.Text = "" + (String.Format("{0:0}", Player.Stamina));
+            playerFollow.WorldPosition = player.WorldPosition;
 
             while (Console.KeyAvailable)
                 Console.ReadKey(true);
@@ -97,7 +115,7 @@ namespace _3dEngine
             Raylib.BeginMode3D(Camera.Camera3D);
 
             Raylib.ClearBackground(new Color(100, 0, 0, 255));
-            Raylib.DrawGrid(500, 20);
+            Raylib.DrawGrid(25, 10);
 
             //Adds all actor icons to buffer
             _scenes[_currentSceneIndex].Draw();

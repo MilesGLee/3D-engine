@@ -6,13 +6,6 @@ using Raylib_cs;
 
 namespace _3dEngine
 {
-    public enum ActorTag
-    {
-        PLAYER,
-        ENEMY,
-        BULLET,
-        GENERIC
-    }
 
     public enum Shape
     {
@@ -28,7 +21,6 @@ namespace _3dEngine
         /// <summary>
         /// The forward facing direction of the actor
         /// </summary>
-        private ActorTag _tag;
         private Collider _collider;
         private Matrix4 _globalTransform = Matrix4.Identity;
         private Matrix4 _localTransform = Matrix4.Identity;
@@ -51,12 +43,6 @@ namespace _3dEngine
         public Color ShapeColor
         {
             get { return _color; }
-        }
-
-        public ActorTag Tag
-        {
-            get { return _tag; }
-            set { _tag = value; }
         }
 
         public Vector3 Forward
@@ -146,17 +132,16 @@ namespace _3dEngine
             get { return _children; }
         }
 
-        public Actor(float x, float y, float z, Shape shape, Color color, string name = "Actor", ActorTag tag = ActorTag.GENERIC) :
-            this(new Vector3 { X = x, Y = y, Z = z }, shape, color, name, tag)
+        public Actor(float x, float y, float z, Shape shape, Color color, string name = "Actor") :
+            this(new Vector3 { X = x, Y = y, Z = z }, shape, color, name)
         {
         }
 
-        public Actor(Vector3 position, Shape shape, Color color, string name = "Actor", ActorTag tag = ActorTag.GENERIC)
+        public Actor(Vector3 position, Shape shape, Color color, string name = "Actor")
         {
             SetColor(color);
             LocalPosition = position;
             _name = name;
-            Tag = tag;
             _shape = shape;
         }
 

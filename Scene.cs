@@ -68,14 +68,6 @@ namespace _3dEngine
             for (int i = 0; i < _actors.Length; i++)
                 _actors[i].DestroySelf();
         }
-        public static void InitializeActors()
-        {
-            //Initializing scene one actors
-            Player player = new Player(0, 1, 0, 6, 3, new Color(0, 0, 100, 255), "Player", Shape.SPHERE);
-            Engine.Camera = new Camera(player);
-
-            SceneOneActors = new Actor[] { player, Engine.Camera };
-        }
 
         public void AddActor(Actor actor)
         {
@@ -89,29 +81,6 @@ namespace _3dEngine
             }
             //Adds the new actor to the end of the new array
             tempArray[_actors.Length] = actor;
-
-            //Set the old array to be the new array;
-            _actors = tempArray;
-        }
-
-        public void AddActor(Actor[] actors)
-        {
-            //Create a temp array larger than the original
-            Actor[] tempArray = new Actor[_actors.Length + actors.Length];
-
-            int j = 0;
-            //Copy all values from the original array into the temp array
-            for (int i = 0; i < _actors.Length; i++)
-            {
-                tempArray[i] = _actors[i];
-                j++;
-            }
-
-            for (int i = 0; i < actors.Length; i++)
-            {
-                tempArray[j] = actors[i];
-                j++;
-            }
 
             //Set the old array to be the new array;
             _actors = tempArray;

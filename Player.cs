@@ -13,6 +13,9 @@ namespace _3dEngine
         private bool _canDodge;
         private bool _dodgeCheck;
 
+        //Attacking Variables
+        public static float Stamina = 100;
+
         //Mouse Variables
         public float mouseXSensitivity = 2;
         public float mouseYSensitivity = 1;
@@ -22,7 +25,6 @@ namespace _3dEngine
             : base(x, y, z, speed, health, color, name, shape)
         {
             Speed = speed;
-            Tag = ActorTag.PLAYER;
             SetScale(1, 1, 1);
         }
 
@@ -34,6 +36,8 @@ namespace _3dEngine
 
         public override void Update(float deltaTime)
         {
+            Console.WriteLine($"{WorldPosition.X}/{WorldPosition.Y}/{WorldPosition.Z}");
+
             GetTranslationInput(deltaTime);
             GetRotationInput(deltaTime);
             GetDodgeInput(deltaTime);
@@ -65,12 +69,13 @@ namespace _3dEngine
             Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime + new Vector3(0, Velocity.Y, 0);
             ApplyGravity();
 
-
             base.Translate(Velocity.X, Velocity.Y, Velocity.Z);
         }
 
         public void GetDodgeInput(float deltaTime)
         {
+            if(Stamina < 100)
+                Stamina += 0.05f;
             if (_dodgeTime > 1)
             {
                 _dodgeTime = 0;
@@ -82,7 +87,7 @@ namespace _3dEngine
             int sideDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
 
-            if (_canDodge && (forwardDirection != 0 || sideDirection != 0) && Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
+            if (_canDodge && (forwardDirection != 0 || sideDirection != 0) && Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && Stamina >= 20)
             {
                 _canDodge = false;
                 _dodgeCheck = false;
@@ -97,6 +102,7 @@ namespace _3dEngine
                     {
                         Speed = 25;
                         _dodgeCheck = true;
+                        Stamina -= 20;
                     }
                 }
                 if (_dodgeTime >= 0.25f)
