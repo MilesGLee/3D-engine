@@ -38,6 +38,7 @@ namespace _3dEngine
         //The bool that is checking the collision of Spheres and AABB boxes alike.s
         public bool CheckCollision(Actor other)
         {
+            //if square do aabb collision, if sphere do sphere collision
             if (other.Collider.ColliderType == ColliderType.SPHERE)
                 return CheckCollisionSphere((SphereCollider)other.Collider);
             if (other.Collider.ColliderType == ColliderType.AABB)

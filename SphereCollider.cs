@@ -53,6 +53,7 @@ namespace _3dEngine
 
         public override void Draw()
         {
+            //Draw sphere collision box
             Raylib.DrawSphere(new System.Numerics.Vector3(base.Owner.WorldPosition.X, base.Owner.WorldPosition.Y, base.Owner.WorldPosition.Z), _collisionRadius, new Color(255, 0, 255, 100));
         }
     }

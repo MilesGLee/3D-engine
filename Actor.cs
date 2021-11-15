@@ -6,7 +6,7 @@ using Raylib_cs;
 
 namespace _3dEngine
 {
-
+    //The shape of the actor enumerator
     public enum Shape
     {
         CUBE,
@@ -40,21 +40,25 @@ namespace _3dEngine
             set { _collider = value; }
         }
 
+        //Color of the shape drawn
         public Color ShapeColor
         {
             get { return _color; }
         }
 
+        //The forward direction of the actor.
         public Vector3 Forward
         {
             get { return new Vector3(_rotation.M02, _rotation.M12, _rotation.M22); }
         }
 
+        //The right of the actor
         public Vector3 Right
         {
             get { return new Vector3(_rotation.M00, _rotation.M10, _rotation.M20); }
         }
 
+        //The up direction of the actor
         public Vector3 Upwards
         {
             get { return new Vector3(_rotation.M01, _rotation.M11, _rotation.M21); }
@@ -240,10 +244,12 @@ namespace _3dEngine
 
         public virtual void Draw()
         {
+            //Gets the position of the actor in a system numerics vector 3 for drawing
             System.Numerics.Vector3 position = new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z);
             if(Collider != null)
                 Collider.Draw();
 
+            //Draws either a square or sphere depending on the shape of the actor.
             switch (_shape)
 
             {
@@ -408,6 +414,7 @@ namespace _3dEngine
 
         }
 
+        //Sets the color of the actor.
         public void SetColor(Color color)
         {
             _color = color;

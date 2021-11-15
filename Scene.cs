@@ -7,6 +7,7 @@ namespace _3dEngine
 {
     class Scene
     {
+        //The scenes actors and ui elements
         private Actor[] _actors;
         private Actor[] _UIElements;
 
@@ -25,6 +26,7 @@ namespace _3dEngine
 
         public virtual void Update(float deltaTime)
         {
+            //loop through all actors and check collision
             for (int i = 0; i < _actors.Length; i++)
             {
                 if (!_actors[i].Started)
@@ -42,6 +44,7 @@ namespace _3dEngine
 
         public virtual void UpdateUI(float deltaTime)
         {
+            //Loop through every ui element and update and start them.
             for (int i = 0; i < _UIElements.Length; i++)
             {
                 if (_UIElements[i] != null)
@@ -53,12 +56,14 @@ namespace _3dEngine
             }
         }
 
+        //Draw for actors
         public virtual void Draw()
         {
             for (int i = 0; i < _actors.Length; i++)
                 _actors[i].Draw();
         }
 
+        //Draw for Ui.
         public virtual void DrawUI()
         {
             for (int i = 0; i < _UIElements.Length; i++)
@@ -72,6 +77,7 @@ namespace _3dEngine
 
         public virtual void End()
         {
+            //Destory all actors
             for (int i = 0; i < _actors.Length; i++)
                 _actors[i].DestroySelf();
         }

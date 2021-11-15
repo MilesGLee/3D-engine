@@ -29,10 +29,11 @@ namespace _3dEngine
         {
             // Camera position
             _camera3D.up = new System.Numerics.Vector3(0, 1, 0); //Camera up vector (rotation towards target)
-            _camera3D.fovy = 45; // Camera field of view Y
+            _camera3D.fovy = 45; // Camera field of view
             _camera3D.projection = CameraProjection.CAMERA_PERSPECTIVE; //Camera mode type
 
-            SetTranslation(0, 3, -13);
+            //Sets the camera in a good position to view the player.
+            SetTranslation(0, 5, -13);
         }
 
         public override void Update(float deltaTime)

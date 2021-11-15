@@ -8,6 +8,7 @@ namespace _3dEngine
 {
     class AABBCollider : Collider
     {
+        //Dimensions of the collider
         private float _width;
         private float _height;
         private float _length;
@@ -36,6 +37,7 @@ namespace _3dEngine
             return false;
         }
 
+        //The override bool for if it collidies with a sphere
         public override bool CheckCollisionSphere(SphereCollider other)
         {
             return other.CheckCollisionAABB(this);
@@ -115,6 +117,7 @@ namespace _3dEngine
             }
         }
 
+        //Draws the bounding box for the collider.
         public override void Draw() 
         {
             Raylib.DrawCube(new System.Numerics.Vector3(base.Owner.WorldPosition.X, base.Owner.WorldPosition.Y, base.Owner.WorldPosition.Z), _width, _height, _length, new Color(255, 0, 255, 100));

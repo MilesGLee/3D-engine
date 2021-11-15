@@ -8,6 +8,7 @@ namespace _3dEngine
 {
     class Player : Actor
     {
+        //Movement and collision variables
         private float _speed;
         private Vector3 _velocity;
         private bool collidingWithWall;
@@ -38,13 +39,14 @@ namespace _3dEngine
 
         public override void Start()
         {
-            SphereCollider playerCollider = new SphereCollider(1, this);
             base.Start();
         }
 
         public override void Update(float deltaTime)
         {
+            //Write player position in console window
             Console.WriteLine($"{WorldPosition.X}/{WorldPosition.Y}/{WorldPosition.Z}");
+            //Update rotation and movement.
             GetTranslationInput(deltaTime);
             GetRotationInput(deltaTime);
             base.Update(deltaTime);
@@ -53,13 +55,17 @@ namespace _3dEngine
 
         public void GetRotationInput(float deltaTime)
         {
+            //get mouse position onscreen and calculate the mousedelta.
             Vector2 mousePosition = new Vector2(Raylib.GetMouseX(), Raylib.GetMouseY());
             Vector2 mouseDelta = mousePosition - mouseOrigin;
 
+            //Get the angle to rotate
             float angle = MathF.Atan2(mouseDelta.Y, mouseDelta.X);
 
+            //if there is an angle to rotate too, rotate the base actor.
             if (mouseDelta.Magnitude > 0)
                 base.Rotate((MathF.Sin(angle) * deltaTime) * mouseYSensitivity, (-MathF.Cos(angle) * deltaTime) * mouseXSensitivity, 0);
+            //Move cursor back to middle of screen to keep it in check.
             Raylib.SetMousePosition(Raylib.GetMonitorWidth(1) / 2, Raylib.GetMonitorHeight(1) / 2);
         }
 
@@ -71,14 +77,16 @@ namespace _3dEngine
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_S));
             int sideDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
+            //if the player is not colliding with any obstacle. Calculate the velocity of their movement.
             if(!collidingWithWall)
                 Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime;
-            
+            //Move player.
             base.Translate(Velocity.X, 0, Velocity.Z);
         }
 
         public override void OnCollision(Actor actor)
         {
+            //if the player collides with a wall, make sure they cant move into or through it.
             if (actor.Name == "Wall") 
             {
                 collidingWithWall = true;
@@ -86,9 +94,11 @@ namespace _3dEngine
             }
         }
 
+        //Draw
         public override void Draw()
         {
-            base.Draw();
+            //Draw
+            base.Draw(); //Draw
         }
     }
 }
