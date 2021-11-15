@@ -44,9 +44,12 @@ namespace _3dEngine
         {
             for (int i = 0; i < _UIElements.Length; i++)
             {
-                if (!_UIElements[i].Started)
-                    _UIElements[i].Start();
-                _UIElements[i].Update(deltaTime);
+                if (_UIElements[i] != null)
+                {
+                    if (!_UIElements[i].Started)
+                        _UIElements[i].Start();
+                    _UIElements[i].Update(deltaTime);
+                }
             }
         }
 
@@ -59,7 +62,12 @@ namespace _3dEngine
         public virtual void DrawUI()
         {
             for (int i = 0; i < _UIElements.Length; i++)
-                _UIElements[i].Draw();
+            {
+                if (_UIElements[i] != null)
+                {
+                    _UIElements[i].Draw();
+                }
+            }
         }
 
         public virtual void End()

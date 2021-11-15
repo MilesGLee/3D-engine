@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MathLibrary;
+using Raylib_cs;
 
 namespace _3dEngine
 {
@@ -112,6 +113,11 @@ namespace _3dEngine
             {
                 return Owner.WorldPosition.Z + (Length / 2);
             }
+        }
+
+        public override void Draw() 
+        {
+            Raylib.DrawCube(new System.Numerics.Vector3(base.Owner.WorldPosition.X, base.Owner.WorldPosition.Y, base.Owner.WorldPosition.Z), _width, _height, _length, new Color(255, 0, 255, 100));
         }
     }
 }

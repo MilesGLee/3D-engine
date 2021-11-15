@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MathLibrary;
+using Raylib_cs;
 
 namespace _3dEngine
 {
@@ -52,6 +53,11 @@ namespace _3dEngine
         public virtual bool CheckCollisionAABB(AABBCollider other)
         {
             return false;
+        }
+
+        public virtual void Draw() 
+        {
+            
         }
     }
 }

@@ -62,18 +62,26 @@ namespace _3dEngine
             _stopwatch.Start();
 
             InitializeWindow();
-            Scene sceneOne = new Scene();
+            Scene scene = new Scene();
 
             player = new Player(0, 1, 0, 6, 3, new Color(0, 0, 100, 255), "Player", Shape.SPHERE);
+            SphereCollider playerCol = new SphereCollider(1, player);
+            player.Collider = playerCol;
             Engine.Camera = new Camera(player);
 
-            text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "");
+            //text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "");
 
-            sceneOne.AddUIElement(text);
-            sceneOne.AddActor(player);
-            sceneOne.AddActor(Camera);
+            Actor Wall1 = new Actor(new Vector3(10, 0, 10), Shape.CUBE, new Color(255, 255, 255, 255), "Wall");
+            Wall1.SetScale(5, 5, 5);
+            AABBCollider wallCol = new AABBCollider(5, 5, 5, Wall1);
+            Wall1.Collider = wallCol;
 
-            SetCurrentScene(sceneOne);
+            scene.AddUIElement(text);
+            scene.AddActor(player);
+            scene.AddActor(Camera);
+            scene.AddActor(Wall1);
+
+            SetCurrentScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
 

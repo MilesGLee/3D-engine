@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MathLibrary;
+using Raylib_cs;
 
 namespace _3dEngine
 {
@@ -48,6 +49,11 @@ namespace _3dEngine
 
             //Return true if the colliders are colliding.
             return distanceFromClosestPoint <= CollisionRadius;
+        }
+
+        public override void Draw()
+        {
+            Raylib.DrawSphere(new System.Numerics.Vector3(base.Owner.WorldPosition.X, base.Owner.WorldPosition.Y, base.Owner.WorldPosition.Z), _collisionRadius, new Color(255, 0, 255, 100));
         }
     }
 }

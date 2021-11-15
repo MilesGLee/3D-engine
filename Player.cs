@@ -10,6 +10,7 @@ namespace _3dEngine
     {
         private float _speed;
         private Vector3 _velocity;
+        private bool collidingWithWall;
 
         //Mouse Variables
         public float mouseXSensitivity = 2;
@@ -44,10 +45,10 @@ namespace _3dEngine
         public override void Update(float deltaTime)
         {
             Console.WriteLine($"{WorldPosition.X}/{WorldPosition.Y}/{WorldPosition.Z}");
-
             GetTranslationInput(deltaTime);
             GetRotationInput(deltaTime);
             base.Update(deltaTime);
+            collidingWithWall = false;
         }
 
         public void GetRotationInput(float deltaTime)
@@ -70,21 +71,24 @@ namespace _3dEngine
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_S));
             int sideDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
-
-            Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime;
-
+            if(!collidingWithWall)
+                Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime;
+            
             base.Translate(Velocity.X, 0, Velocity.Z);
         }
 
         public override void OnCollision(Actor actor)
         {
-            Console.WriteLine("Collision");
+            if (actor.Name == "Wall") 
+            {
+                collidingWithWall = true;
+                Velocity = -Velocity;
+            }
         }
 
         public override void Draw()
         {
             base.Draw();
-            //Collider.Draw();
         }
     }
 }

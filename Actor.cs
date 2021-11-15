@@ -132,6 +132,12 @@ namespace _3dEngine
             get { return _children; }
         }
 
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
         public Actor(float x, float y, float z, Shape shape, Color color, string name = "Actor") :
             this(new Vector3 { X = x, Y = y, Z = z }, shape, color, name)
         {
@@ -235,8 +241,8 @@ namespace _3dEngine
         public virtual void Draw()
         {
             System.Numerics.Vector3 position = new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z);
-
-            //System.Numerics.Vector3 endPos = new System.Numerics.Vector3(WorldPosition.X + Forward.X * 50, WorldPosition.Y + Forward.Y * 50, WorldPosition.Z + Forward.Z * 50);
+            if(Collider != null)
+                Collider.Draw();
 
             switch (_shape)
 
@@ -246,7 +252,6 @@ namespace _3dEngine
                     break;
                 case Shape.SPHERE:
                     Raylib.DrawSphere(position, ScaleX, ShapeColor);
-                    //Raylib.DrawLine3D(position, endPos, Color.RED);
                     break;
                 case Shape.NULL:
                     break;
