@@ -6,23 +6,30 @@ using Raylib_cs;
 
 namespace _3dEngine
 {
-    class Player : Entity
+    class Player : Actor
     {
-        //Dodge Variables
-        private float _dodgeTime;
-        private bool _canDodge;
-        private bool _dodgeCheck;
-
-        //Attacking Variables
-        public static float Stamina = 100;
+        private float _speed;
+        private Vector3 _velocity;
 
         //Mouse Variables
         public float mouseXSensitivity = 2;
         public float mouseYSensitivity = 1;
         private Vector2 mouseOrigin = new Vector2(Raylib.GetMonitorWidth(1) / 2, Raylib.GetMonitorHeight(1) / 2);
 
+        public float Speed 
+        {
+            get { return _speed; }
+            set { _speed = value; }
+        }
+
+        public Vector3 Velocity 
+        {
+            get { return _velocity; }
+            set { _velocity = value; }
+        }
+
         public Player(float x, float y, float z, float speed, int health, Color color, string name = "Player", Shape shape = Shape.CUBE)
-            : base(x, y, z, speed, health, color, name, shape)
+            : base(x, y, z, shape, color, name)
         {
             Speed = speed;
             SetScale(1, 1, 1);
@@ -40,8 +47,6 @@ namespace _3dEngine
 
             GetTranslationInput(deltaTime);
             GetRotationInput(deltaTime);
-            GetDodgeInput(deltaTime);
-
             base.Update(deltaTime);
         }
 
@@ -66,65 +71,14 @@ namespace _3dEngine
             int sideDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
                 - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
 
-            Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime + new Vector3(0, Velocity.Y, 0);
-            ApplyGravity();
+            Velocity = ((forwardDirection * Forward) + (sideDirection * Right)).Normalized * Speed * deltaTime;
 
-            base.Translate(Velocity.X, Velocity.Y, Velocity.Z);
-        }
-
-        public void GetDodgeInput(float deltaTime)
-        {
-            if(Stamina < 100)
-                Stamina += 0.05f;
-            if (_dodgeTime > 1)
-            {
-                _dodgeTime = 0;
-                _canDodge = true;
-            }
-
-            int forwardDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_W))
-                - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_S));
-            int sideDirection = Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_A))
-                - Convert.ToInt32(Raylib.IsKeyDown(KeyboardKey.KEY_D));
-
-            if (_canDodge && (forwardDirection != 0 || sideDirection != 0) && Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT) && Stamina >= 20)
-            {
-                _canDodge = false;
-                _dodgeCheck = false;
-            }
-
-            if (!_canDodge)
-            {
-                if (_dodgeTime >= 0 && _dodgeTime <= 0.25f)
-                {
-                    SetColor(new Color(0, 0, 100, 100));
-                    if (_dodgeCheck == false)
-                    {
-                        Speed = 25;
-                        _dodgeCheck = true;
-                        Stamina -= 20;
-                    }
-                }
-                if (_dodgeTime >= 0.25f)
-                {
-                    Speed = 6;
-                    SetColor(new Color(0, 0, 100, 255));
-                    if (_dodgeCheck == true)
-                        _dodgeCheck = false;
-                }
-                _dodgeTime += deltaTime;
-            }
-        }
-
-        public void TakeDamage()
-        {
-            Health--;
+            base.Translate(Velocity.X, 0, Velocity.Z);
         }
 
         public override void OnCollision(Actor actor)
         {
             Console.WriteLine("Collision");
-
         }
 
         public override void Draw()

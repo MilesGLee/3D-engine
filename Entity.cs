@@ -36,18 +36,6 @@ namespace _3dEngine
             set { _gravity = value; }
         }
 
-        public virtual void ApplyGravity()
-        {
-            if (!IsGrounded())
-            {
-                Velocity += Gravity;
-            }
-            else
-            {
-                Velocity = new Vector3(Velocity.X, 0, Velocity.Z);
-            }
-        }
-
         public Entity(float x, float y, float z, float speed, int health, Color color, string name = "Character", Shape shape = Shape.SPHERE)
              : base(x, y, z, shape, color, name)
         {

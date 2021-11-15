@@ -9,7 +9,6 @@ namespace _3dEngine
     {
         private Actor[] _actors;
         private Actor[] _UIElements;
-        public static Actor[] SceneOneActors;
 
         public Scene()
         {

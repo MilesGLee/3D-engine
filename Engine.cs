@@ -17,7 +17,6 @@ namespace _3dEngine
         public static Scene CurrentScene;
         public static Camera Camera;
         private UIText text;
-        private Actor playerFollow;
         private Actor player;
 
         /// <summary>
@@ -70,20 +69,9 @@ namespace _3dEngine
 
             text = new UIText(50, 50, "test", new Color(255, 255, 255, 255), 1000, 1000, 100, "");
 
-            playerFollow = new Actor(new Vector3(0, 0, 0), Shape.CUBE, new Color(0, 0, 0, 0), "Player Follow");
-            Actor playerHealth = new Actor(new Vector3(0, 1.5f, 0), Shape.CUBE, Color.GREEN, "Player Health");
-            playerHealth.SetScale(2, 0.5f, 0.5f);
-            playerHealth.Parent = playerFollow;
-            Actor sword = new Actor(new Vector3(0, 0, 1.5f), Shape.CUBE, Color.GRAY, "Player Sword");
-            sword.Parent = playerFollow;
-            sword.SetScale(0.5f, 0.5f, 2);
-
             sceneOne.AddUIElement(text);
             sceneOne.AddActor(player);
             sceneOne.AddActor(Camera);
-            sceneOne.AddActor(playerHealth);
-            sceneOne.AddActor(playerFollow);
-            sceneOne.AddActor(sword);
 
             SetCurrentScene(sceneOne);
             _scenes[_currentSceneIndex].Start();
@@ -99,8 +87,7 @@ namespace _3dEngine
             _scenes[_currentSceneIndex].Update(deltaTime);
             _scenes[_currentSceneIndex].UpdateUI(deltaTime);
 
-            text.Text = "" + (String.Format("{0:0}", Player.Stamina));
-            playerFollow.WorldPosition = player.WorldPosition;
+            //text.Text = "" + (String.Format("{0:0}", Player.));
 
             while (Console.KeyAvailable)
                 Console.ReadKey(true);
@@ -114,7 +101,7 @@ namespace _3dEngine
             Raylib.BeginDrawing();
             Raylib.BeginMode3D(Camera.Camera3D);
 
-            Raylib.ClearBackground(new Color(100, 0, 0, 255));
+            Raylib.ClearBackground(new Color(150, 150, 255, 255));
             Raylib.DrawGrid(25, 10);
 
             //Adds all actor icons to buffer
