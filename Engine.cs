@@ -18,7 +18,7 @@ namespace _3dEngine
         public static Scene CurrentScene;
         public static Camera Camera;
         private UIText text;
-        private Actor player;
+        private Player player;
 
         /// <summary>
         /// Called to begin the application

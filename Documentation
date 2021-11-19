@@ -1,0 +1,397 @@
+**Miles Lee**  
+s218009  
+Math For Games  
+3D Engine Application
+
+# 1. Requirements
+1. **Description of problem**  
+    **Name**: 3D Engine  
+    **Problem Statement**:  
+    Creation of a real time application demonstrating the techniques we've learned in class for the past module.  
+    **Problem Specifications**:  
+    * Game application includes introductory exercises.  
+    * Game uses exercises on matricies and vertors.  
+    * Math Library passes unit test and is used in project.
+2. **Input Information**: 'UI'-The game uses raylib to create a third dimensional environment and with that the game operates from a controllable camera following and looking at the player.
+3. **Output Information**: The program will display the view from the camera on the window, and a text box at the top left displaying the players current position in the world. 
+4. **User Interface Information**:  
+    * The UI displays whatever actors are in view of the camera itself.
+
+# 2. Design  
+1. *System Architecture*  
+    The program displays all requirements for the assesment, the player can be controlled via conventional WASD controls and a mouse operated camera to view the environment around the player. There are various cubes placed around the world the player can collide with.
+2. *Object Information*  
+    * **File Name**: Engine.cs  
+        * _applicationShouldClose (boolean)
+            * Description: Boolean to decide if the application should exit or not.
+            * Visibility: private static
+        * _currentSceneIndx (integer)
+            * Description: Integer that is used to navigate the _scene array.
+            * Visibility: private static
+        * _scene (Scene array)
+            * Description: The array of all scenes used in the program
+            * Visibility: private
+        * _stopwatch (Stopwatch)
+            * Description: A raylib variable used to store the passage of time (IE: deltaTime)
+            * Visibility: private
+        * CurrentScene (Scene)
+            * Description: The scene that is currently on display and is in operation in the application.
+            * Visibility: public static
+        * Camera (Camera)
+            * Description: Raylib variable used to create the camera used to view three dimensional environments.
+            * Visibility: public static
+        * text (UIText)
+            * Description: The text box that is displayed at the top right and shows the players current WorldPosition.
+            * Visibility: private
+        * player (Player)
+            * Description: The variable that holds the player actor. 
+            * Visibility: private
+        * Run()
+            * Description: The function that is called immedeatly upon start of the program. Loops the program using the _stopwatch to create a sense of time.
+            * Visibility: public
+            * Arguments: None
+        * Start()
+            * Description: Function that initializes the scene and actors into said scene.
+            * Visibility: private
+            * Arguments: none. 
+        * Update()
+            * Description: Function that is repeated every frame during operation of the game, refreshes the scene and ui.
+            * Visibility: private
+            * Arguments: float deltaTime 
+        * Draw()
+            * Description: The function that draws all of the actors to the camera window and the UI.
+            * Visibility: private
+            * Arguments: none. 
+        * End()
+            * Description: Ends the application and closes the window.
+            * Visibility: private
+            * Arguments: none. 
+        * AddScene (int)
+            * Description: Adds the given scene to the current scene array.
+            * Visibility: public
+            * Arguments: Scene scene 
+        * SetCurrentScene()
+            * Description: Sets the current active scene to the given scene.
+            * Visibility: public
+            * Arguments: Scene scene 
+        * InitializeWindow()
+            * Description: Sets up the displayed window to the correct sizes and frames per second. 
+            * Visibility: public
+            * Arguments: none.
+        * CloseApplication()
+            * Description: Closes the application, which calls the End() function.
+            * Visibility: public
+            * Arguments: none.  
+    * **File Name**: Scene.cs  
+        * _actors (Actor array)
+            * Description: The array of all the actors in the scene.
+            * Visibility: private  
+        * _UIElements (Actor array)
+            * Description: The array of all the UI actors in the scene.
+            * Visibility: private 
+        * Scene()
+            * Description: Initializes the _actors and _UIElements to new empty arrays.
+            * Visibility: public
+            * Arguments: none.
+        * Actors(Actor array)
+            * Description: Has a get function that returns the _actors array.
+            * Visibility: public
+            * Arguments: none.    
+        * Start()
+            * Description: Does nothing in the scene itself, but acts as a virtual funtion to be overriden.
+            * Visibility: public virtual
+            * Arguments: none.
+        * Update()
+            * Description: The update function for the scene that is called every frame. Runs through all actors in the scene and checks if a collision has occured.
+            * Visibility: public virtual
+            * Arguments: float deltaTime.
+        * UpdateUI()
+            * Description: Runs through each UI element in the scene and calls their update function
+            * Visibility: public virtual
+            * Arguments: float deltaTime.
+        * Draw()
+            * Description: Calls the draw function for every actor in the scene.
+            * Visibility: public virtual
+            * Arguments: none.
+        * DrawUI()
+            * Description: Calls the draw function for every UI element in the scene.
+            * Visibility: public virtual
+            * Arguments: none.
+        * End()
+            * Description: Ends the current scene and destroys all the current actors.
+            * Visibility: public virtual
+            * Arguments: none.
+        * AddActor()
+            * Description: Adds the given actor to the _actor array
+            * Visibility: public
+            * Arguments: Actor actor.
+        * AddUIElement()
+            * Description: adds the given UI element to the _UIElements array 
+            * Visibility: public
+            * Arguments: Actor UI.
+        * RemoveActor()
+            * Description: removes the given actor from the _actors array 
+            * Visibility: public
+            * Arguments: Actor actor
+        * RemoveUIElement()
+            * Description: removes the given ui element from the _UIElements array 
+            * Visibility: public 
+            * Arguments: UIText actor.
+    * **File Name**: Actor.cs
+        * Shape (enum)
+            * Description: An enumerator storing all the shapes actors can be in.
+            * Visibility: public
+        * _name (string)
+            * Description: the name of the actor 
+            * Visibility: private
+        * _started (boolean)
+            * Description: Boolean used to start the actor once.
+            * Visibility: private
+        * _collider (Collider)
+            * Description: The collider of the actor
+            * Visibility: private
+        * _globalTransform (Matrix4)
+            * Description: The matrix4 that is used for the actors position in relation to the world.
+            * Visibility: private
+        * _localTransform (Matrix4)
+            * Description: The matrix4 that is used for the actors local position.
+            * Visibility: private
+        * _transform (Matrix4)
+            * Description: a matrix4 used to move the actor around.
+            * Visibility:private
+        * _rotation (Matrix4)
+            * Description: The matrix4 used to store the rotation of the actor
+            * Visibility: private
+        * _scale (Matrix4)
+            * Description: The matrix4 used to store the size of the actor 
+            * Visibility: private
+        * _children (Actor array)
+            * Description: The array of all the actors children
+            * Visibility: private
+        * _parent (Actor)
+            * Description: The parent of the actor 
+            * Visibility: private
+        * _shape (Shape)
+            * Description: the shape of the actor 
+            * Visibility: private
+        * _color (Color)
+            * Description: The color of the actor 
+            * Visibility: private
+        * UpdateTransforms ()
+            * Description: The function used to update the actors position in relation to the world and its parent if it has one.
+            * Visibility: public
+            * Arguments: none.
+        * AddChild ()
+            * Description: A function used to add the given actor to the children array
+            * Visibility: public 
+            * Arguments: Actor child
+        * RemoveChild ()
+            * Description: The function used to remove the given actor from the _children array
+            * Visibility: public
+            * Arguments: Actor child
+        * Start ()
+            * Description: The function that is called once when the actor is created
+            * Visibility: public virtual
+            * Arguments: none.
+        * Update ()
+            * Description: The function that is called every frame while the application is running
+            * Visibility: public virtual
+            * Arguments: float deltaTime
+        * Draw ()
+            * Description: The function that draws the actors shape into the world
+            * Visibility: public virtual
+            * Arguments: none.
+        * End ()
+            * Description: Serves as a virtual and does nothing for the actor itself
+            * Visibility: public virtual
+            * Arguments: none.
+        * DestroySelf ()
+            * Description: Removes the actor from the scene and deletes itself
+            * Visibility: public
+            * Arguments: none.
+        * OnCollision ()
+            * Description: The virtual function called when any actors collide with one another
+            * Visibility: public virtual
+            * Arguments: Actor actor
+        * CheckForCollision ()
+            * Description: The function that checks if the current and given actors have collided.
+            * Visibility: public virtual
+            * Arguments: Actor actor
+        * SetTranslation ()
+            * Description: sets the translation of the actor to the given coordinates
+            * Visibility: public
+            * Arguments:flaot translationX, float translationY, float translationZ
+        * Translate ()
+            * Description: moves the actor to the given coordinates by multiplying the matrix 4's
+            * Visibility: public
+            * Arguments:float translationX, float translationY, float translationZ
+        * SetRotation ()
+            * Description: Sets the rotation with the given radians
+            * Visibility: public
+            * Arguments: float radiansX, float radiansY, float radiansZ
+        * Rotate ()
+            * Description: Rotates the actor in the direction of the given radians
+            * Visibility: public
+            * Arguments: float radiansX, float radiansY, float radiansZ
+        * SetScale ()
+            * Description: Sets the actors size to the given variables
+            * Visibility: public
+            * Arguments: float x, float y, float z
+        * Scale ()
+            * Description: Scales the actor to the given size by multiplying the matricies.
+            * Visibility: public
+            * Arguments: float x, float y, float z
+        * LookAt ()
+            * Description: rotates the actor to face the given vector3 position 
+            * Visibility: public
+            * Arguments: Vector3 position
+        * SetColor()
+            * Description: Sets the color of the actor to the new given color
+            * Visibility: public
+            * Arguments: Color color
+    * **File Name**: Player.cs
+        * _speed (float)
+            * Description: the speed of the player 
+            * Visibility: private
+        * _velocity (Vector3)
+            * Description: the velocity of the player
+            * Visibility: private
+        * collidingWithWall (boolean)
+            * Description: a bool for if the player is colliding with an obstacle or not
+            * Visibility: private
+        * mouseXSensitivity (float)
+            * Description: the mouses sensitivity on the x axis
+            * Visibility: public
+        * mouseYSensitivity (float)
+            * Description: The mouses sensitivity on the y axis
+            * Visibility: public
+        * mouseOrigin (Vector2)
+            * Description: where the starting point of the mouse should be
+            * Visibility: private
+        * Start ()
+            * Description: starts the actor base of the player
+            * Visibility: public override
+            * Arguments: none.
+        * Update()
+            * Description: the update function overriden from the actors base.
+            * Visibility: public override
+            * Arguments: float deltaTime
+        * GetRotationInput ()
+            * Description: the function that rotates the camera based on mouse input axis
+            * Visibility: public
+            * Arguments: float deltaTime
+        * GetTranslationInput ()
+            * Description: The function that moves the player based on WASD input
+            * Visibility: public
+            * Arguments: float deltaTime
+        * OnCollision ()
+            * Description: The override collision function for the player, updates their wall collision boolean
+            * Visibility: public override
+            * Arguments: Actor actor
+        * Draw ()
+            * Description: Calls the base draw function
+            * Visibility: public override
+            * Arguments: none.
+    * **File Name**: Camera.cs
+        * _camera3D (Camera3D)
+            * Description: the raylib 3d camera
+            * Visibility: private
+        * _targetActor (Actor)
+            * Description: The actor the camera should look at
+            * Visibility: private
+        * Start ()
+            * Description: The start function thats called once when the camera is created
+            * Visibility: public override
+            * Arguments: none.
+        * Update ()
+            * Description: The update function that is called every frame
+            * Visibility: public override
+            * Arguments: float deltaTime
+    * **File Name**: Collider.cs
+        * ColliderType (enum)
+            * Description: The two types of colliders
+            * Visibility: private
+        * _owner (Actor)
+            * Description: the colliders owner
+            * Visibility: private
+        * _colliderType (ColliderType)
+            * Description: the type of collider this is
+            * Visibility: private
+        * CheckCollision (bool)
+            * Description: Function that returns true if a collision happened
+            * Visibility: public
+            * Arguments: Actor other
+        * CheckCollisionSphere (bool)
+            * Description: Virtual function to be used elsewhere
+            * Visibility: public virtual
+            * Arguments: SphereCollider other
+        * CheckCollisionAABB (bool)
+            * Description: Virtual function to be used elsewhere
+            * Visibility: public virtual
+            * Arguments: AABBCollider other
+        * Draw()
+            * Description: Virtual function
+            * Visibility: public virtual
+            * Arguments: none.
+    * **File Name**: AABBCollider.cs
+        * _width (float)
+            * Description: The width of the collider 
+            * Visibility: private
+        * _height (float)
+            * Description: The height of the collider 
+            * Visibility: private
+        * _length (float)
+            * Description: The length of the collider 
+            * Visibility: private
+        * CheckCollisionAABB (bool)
+            * Description: Checks for a collision between two AABB collidiers
+            * Visibility: public override
+            * Arguments: AABBCollider other
+        * CheckCollisionSphere (bool)
+            * Description: Checks for a collision between a AABB collider and a sphere collider
+            * Visibility: public override
+            * Arguments: SphereCollider other
+        * Draw ()
+            * Description: Draws the collider onto the screen
+            * Visibility: public override
+            * Arguments: none.
+    * **File Name**: SphereCollider.cs
+        * _collisionRadius (float)
+            * Description: The radius of the sphere collider
+            * Visibility: private
+        * CheckCollisionSphere (bool)
+            * Description: Checks for a collision between two sphere colliders
+            * Visibility: public override
+            * Arguments: SphereCollider other
+        * CheckCollisionAABB (bool)
+            * Description: Checks for a collision between a sphere and a AABB collider
+            * Visibility: public override
+            * Arguments: AABBCollider other
+        * Draw ()
+            * Description: Draws the sphere collider to the window
+            * Visibility: public override
+            * Arguments: none.
+    * **File Name**: UIText.cs
+        * Text (string)
+            * Description: The text string of the UIText
+            * Visibility: public
+        * Width (int)
+            * Description: The width of the text box
+            * Visibility: public
+        * Height (int)
+            * Description: The height of the text box
+            * Visibility: public
+        * FontSize (int)
+            * Description: The size of the text in the text box
+            * Visibility: public
+        * Font (Font)
+            * Description: Raylib the font style of the text
+            * Visibility: public
+        * FontColor (Color)
+            * Description: The color of the text in the text box 
+            * Visibility: public
+        * Draw ()
+            * Description: Draws the UIText in 2d onto the game window
+            * Visibility: public override
+            * Arguments: none.
+    
